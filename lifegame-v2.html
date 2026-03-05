@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LIFEGAME</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Syne+Mono&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0e0e0f;
+  --paper: #f5f0e8;
+  --paper2: #ede8df;
+  --accent: #c8410a;
+  --accent2: #e85d20;
+  --gold: #b8860b;
+  --gold2: #d4a017;
+  --blue: #1a3a6b;
+  --blue2: #2456a4;
+  --green: #1a5c3a;
+  --green2: #2d8a56;
+  --muted: #8a8070;
+  --border: #d0c8b8;
+  --border2: #b8b0a0;
+  --shadow: rgba(14,14,15,0.12);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Syne', sans-serif;
+  font-size: 16px;
+  min-height: 100vh;
+}
+
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='4' height='4' fill='%23f5f0e8'/%3E%3Ccircle cx='1' cy='1' r='0.5' fill='%23d0c8b8' opacity='0.4'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 0; opacity: 0.6;
+}
+
+#app {
+  position: relative; z-index: 1;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+}
+
+/* SCREENS */
+.screen { display: none; }
+.screen.active { display: block; animation: rise 0.35s ease; }
+@keyframes rise { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+
+/* HEADER */
+.masthead {
+  border-bottom: 2px solid var(--ink);
+  padding-bottom: 12px;
+  margin-bottom: 32px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.masthead-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.6rem;
+  letter-spacing: -0.02em;
+}
+.masthead-issue {
+  font-family: 'Syne Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+
+/* EDITORIAL ELEMENTS */
+.kicker {
+  font-family: 'Syne Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.headline {
+  font-family: 'Instrument Serif', serif;
+  font-size: 2.2rem;
+  line-height: 1.15;
+  margin-bottom: 12px;
+  letter-spacing: -0.01em;
+}
+
+.subhead {
+  font-size: 1rem;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 24px;
+  font-weight: 400;
+}
+
+/* RULE */
+.rule { height: 2px; background: var(--ink); margin: 24px 0; }
+.rule-thin { height: 1px; background: var(--border); margin: 20px 0; }
+.rule-dotted { height: 1px; border-top: 1px dashed var(--border2); margin: 16px 0; }
+
+/* CHAT INTERFACE */
+.chat-area {
+  min-height: 300px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.msg {
+  max-width: 88%;
+  line-height: 1.6;
+  animation: rise 0.25s ease;
+}
+
+.msg-ai {
+  align-self: flex-start;
+}
+.msg-ai .bubble {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 14px 18px;
+  border-radius: 2px 16px 16px 16px;
+  font-size: 0.95rem;
+}
+.msg-ai .sender {
+  font-family: 'Syne Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--muted);
+  margin-bottom: 4px;
+  letter-spacing: 0.12em;
+}
+
+.msg-user {
+  align-self: flex-end;
+}
+.msg-user .bubble {
+  background: var(--accent);
+  color: #fff;
+  padding: 12px 16px;
+  border-radius: 16px 2px 16px 16px;
+  font-size: 0.95rem;
+}
+
+.msg-system .bubble {
+  background: transparent;
+  border: 1px dashed var(--border2);
+  color: var(--muted);
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-size: 0.82rem;
+  font-family: 'Syne Mono', monospace;
+  letter-spacing: 0.05em;
+  align-self: center;
+  text-align: center;
+  width: 100%;
+}
+
+/* TYPING INDICATOR */
+.typing .bubble {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 14px 18px;
+  border-radius: 2px 16px 16px 16px;
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+}
+.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--paper); opacity: 0.5; animation: blink 1.2s infinite; }
+.dot:nth-child(2) { animation-delay: 0.2s; }
+.dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes blink { 0%,80%,100%{opacity:0.3;transform:scale(1)} 40%{opacity:1;transform:scale(1.2)} }
+
+/* INPUT ROW */
+.input-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  border-top: 2px solid var(--ink);
+  padding-top: 14px;
+}
+
+textarea.chat-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.95rem;
+  color: var(--ink);
+  resize: none;
+  min-height: 44px;
+  max-height: 120px;
+  line-height: 1.5;
+  padding: 8px 0;
+}
+textarea.chat-input::placeholder { color: var(--muted); }
+
+.send-btn {
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  border-radius: 50%;
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  transition: background 0.15s, transform 0.1s;
+}
+.send-btn:hover { background: var(--accent); }
+.send-btn:active { transform: scale(0.93); }
+.send-btn:disabled { background: var(--border2); cursor: not-allowed; }
+
+/* QUEST CARD — newspaper column style */
+.quest-col {
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--ink);
+  padding: 16px;
+  margin-bottom: 12px;
+  position: relative;
+  transition: box-shadow 0.2s;
+}
+.quest-col:hover { box-shadow: 4px 4px 0 var(--ink); }
+
+.quest-col-type {
+  font-family: 'Syne Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.quest-col-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: 1.15rem;
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+.quest-col-desc {
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.55;
+  margin-bottom: 10px;
+}
+.quest-col-footer {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
+  margin-top: 4px;
+}
+.tag {
+  font-family: 'Syne Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  padding: 3px 8px;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+}
+.tag-xp { color: var(--blue2); }
+.tag-gold { color: var(--gold); }
+.tag-skill { color: var(--green2); }
+.tag-diff-easy { color: var(--green2); }
+.tag-diff-med { color: var(--gold); }
+.tag-diff-hard { color: var(--accent); }
+
+/* STAT GRID */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin: 16px 0;
+}
+.stat-cell {
+  background: var(--paper);
+  padding: 12px 10px;
+  text-align: center;
+}
+.stat-val {
+  font-family: 'Instrument Serif', serif;
+  font-size: 1.8rem;
+  display: block;
+  color: var(--ink);
+  line-height: 1;
+}
+.stat-name {
+  font-family: 'Syne Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  display: block;
+  margin-top: 4px;
+}
+
+/* XP BAR */
+.xp-wrap { margin: 12px 0; }
+.xp-meta {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Syne Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--muted);
+  margin-bottom: 5px;
+}
+.xp-track {
+  height: 5px;
+  background: var(--border);
+  border-radius: 0;
+}
+.xp-fill {
+  height: 100%;
+  background: var(--ink);
+  transition: width 0.8s ease;
+}
+
+/* BUTTONS */
+.btn {
+  display: inline-block;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  padding: 12px 22px;
+  border: 2px solid var(--ink);
+  border-radius: 2px;
+  cursor: pointer;
+  background: transparent;
+  color: var(--ink);
+  transition: background 0.15s, color 0.15s, transform 0.1s;
+}
+.btn:hover { background: var(--ink); color: var(--paper); }
+.btn:active { transform: scale(0.97); }
+.btn-fill { background: var(--ink); color: var(--paper); }
+.btn-fill:hover { background: var(--accent); border-color: var(--accent); }
+.btn-accent { background: var(--accent); color: #fff; border-color: var(--accent); }
+.btn-accent:hover { background: var(--accent2); border-color: var(--accent2); }
+.btn-block { display: block; width: 100%; text-align: center; }
+.btn-sm { padding: 7px 14px; font-size: 0.78rem; }
+
+/* COMMUNITY CARD */
+.story-card {
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  padding: 16px;
+  margin-bottom: 12px;
+  background: var(--paper2);
+}
+.story-card-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-bottom: 2px;
+}
+.story-card-meta {
+  font-family: 'Syne Mono', monospace;
+  font-size: 0.62rem;
+  color: var(--muted);
+  margin-bottom: 10px;
+  letter-spacing: 0.1em;
+}
+.story-card-excerpt {
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 10px;
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+}
+
+/* REGEN MODAL */
+.modal-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(14,14,15,0.6);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.modal-overlay.open { display: flex; animation: rise 0.2s ease; }
+.modal-box {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  padding: 28px;
+  max-width: 440px;
+  width: 100%;
+}
+.modal-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: 1.4rem;
+  margin-bottom: 8px;
+}
+.modal-sub { font-size: 0.85rem; color: var(--muted); margin-bottom: 16px; line-height: 1.5; }
+
+/* FORM */
+label {
+  display: block;
+  font-family: 'Syne Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  margin-bottom: 6px;
+  margin-top: 16px;
+}
+input[type=text], textarea.field, select.field {
+  width: 100%;
+  background: var(--paper2);
+  border: 1px solid var(--border);
+  border-bottom: 2px solid var(--ink);
+  padding: 10px 12px;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.9rem;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.15s;
+  border-radius: 0;
+}
+input:focus, textarea.field:focus, select.field:focus {
+  border-color: var(--accent);
+  background: #fff;
+}
+textarea.field { resize: none; line-height: 1.55; }
+
+/* STREAK */
+.streak-dots {
+  display: flex; gap: 4px; margin: 10px 0;
+}
+.sd {
+  width: 18px; height: 18px;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  background: var(--paper2);
+  font-family: 'Syne Mono', monospace;
+  font-size: 0.5rem;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--muted);
+}
+.sd.lit { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+/* NOTICE BOX */
+.notice {
+  background: var(--paper2);
+  border-left: 3px solid var(--accent);
+  padding: 10px 14px;
+  font-size: 0.83rem;
+  color: var(--muted);
+  line-height: 1.55;
+  margin: 12px 0;
+}
+
+/* NAV TABS */
+.nav-tabs {
+  display: flex;
+  border-bottom: 2px solid var(--ink);
+  margin-bottom: 24px;
+  gap: 0;
+}
+.nav-tab {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  padding: 8px 16px;
+  cursor: pointer;
+  color: var(--muted);
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: color 0.15s;
+}
+.nav-tab.active { color: var(--ink); border-bottom-color: var(--accent); }
+.nav-tab:hover { color: var(--ink); }
+
+/* BADGE */
+.badge {
+  display: inline-block;
+  font-family: 'Syne Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  padding: 3px 8px;
+  background: var(--paper2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  color: var(--muted);
+  margin: 2px;
+}
+.badge.earned { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+.flex { display:flex; gap:10px; flex-wrap:wrap; }
+.grow { flex:1; min-width:0; }
+.mt { margin-top:16px; }
+.dim { color:var(--muted); font-size:0.85rem; }
+.mono { font-family:'Syne Mono',monospace; }
+.serif { font-family:'Instrument Serif',serif; }
+
+/* LOADING SPINNER */
+.spinner {
+  display: inline-block;
+  width: 18px; height: 18px;
+  border: 2px solid var(--border);
+  border-top-color: var(--ink);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  vertical-align: middle;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* TOAST */
+#toast {
+  position: fixed;
+  bottom: 20px; left: 50%;
+  transform: translateX(-50%) translateY(60px);
+  background: var(--ink);
+  color: var(--paper);
+  font-family: 'Syne Mono', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  padding: 10px 20px;
+  border-radius: 2px;
+  transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  z-index: 999;
+  white-space: nowrap;
+}
+#toast.show { transform: translateX(-50%) translateY(0); }
+
+@media (max-width:480px) {
+  .headline { font-size: 1.7rem; }
+  .stat-grid { grid-template-columns: repeat(2,1fr); }
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ══ LANDING ══════════════════════════════════════════════════ -->
+<div class="screen active" id="s-landing">
+  <div class="masthead">
+    <div class="masthead-title">LIFEGAME</div>
+    <div class="masthead-issue">PROTOTYPE · ISSUE 001</div>
+  </div>
+
+  <div class="kicker">Your Life. Gamified.</div>
+  <div class="headline">Stop staring at<br><em>Level 10.</em></div>
+  <p class="subhead">Tell us what you want to become. We'll break it into quests you can start today — not someday.</p>
+
+  <div class="rule"></div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:28px;">
+    <div style="background:var(--paper);padding:16px 12px;text-align:center;">
+      <div style="font-size:1.5rem;margin-bottom:6px;">💬</div>
+      <div style="font-size:0.8rem;font-weight:700;margin-bottom:3px;">Just Talk</div>
+      <div class="dim" style="font-size:0.72rem;">AI asks until it understands</div>
+    </div>
+    <div style="background:var(--paper);padding:16px 12px;text-align:center;">
+      <div style="font-size:1.5rem;margin-bottom:6px;">⚔️</div>
+      <div style="font-size:0.8rem;font-weight:700;margin-bottom:3px;">Get Quests</div>
+      <div class="dim" style="font-size:0.72rem;">Calibrated to your level</div>
+    </div>
+    <div style="background:var(--paper);padding:16px 12px;text-align:center;">
+      <div style="font-size:1.5rem;margin-bottom:6px;">📈</div>
+      <div style="font-size:0.8rem;font-weight:700;margin-bottom:3px;">Level Up</div>
+      <div class="dim" style="font-size:0.72rem;">Daily check-ins build streaks</div>
+    </div>
+  </div>
+
+  <button class="btn btn-fill btn-block" onclick="go('s-chat')">▶ &nbsp; Start Your Journey</button>
+
+  <div class="rule-thin"></div>
+
+  <div class="flex" style="gap:8px;margin-top:4px;">
+    <button class="btn grow" style="font-size:0.78rem;" onclick="go('s-community')">📖 Community Roadmaps</button>
+    <button class="btn grow" style="font-size:0.78rem;" onclick="go('s-dashboard')">👤 My Dashboard</button>
+  </div>
+</div>
+
+<!-- ══ CHAT ONBOARDING ══════════════════════════════════════════ -->
+<div class="screen" id="s-chat">
+  <div class="masthead">
+    <div class="masthead-title">LIFEGAME</div>
+    <div class="masthead-issue mono" style="font-size:0.6rem;color:var(--accent);" id="chat-status">CONVERSATION</div>
+  </div>
+
+  <div class="kicker">Character Creation</div>
+  <div style="font-family:'Instrument Serif',serif;font-size:1.3rem;margin-bottom:20px;">
+    Tell us about yourself. No forms — just talk.
+  </div>
+
+  <div class="notice">
+    🔒 This is a safe space. You can share anything — goals, struggles, even things you'd never say out loud. No judgment.
+  </div>
+
+  <div class="rule-thin"></div>
+
+  <div class="chat-area" id="chat-area"></div>
+
+  <div class="input-row">
+    <textarea class="chat-input" id="chat-input" placeholder="Type your answer..." rows="1"
+      onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+    <button class="send-btn" id="send-btn" onclick="sendMessage()">↑</button>
+  </div>
+</div>
+
+<!-- ══ QUEST BOARD ══════════════════════════════════════════════ -->
+<div class="screen" id="s-quests">
+  <div class="masthead">
+    <div class="masthead-title">LIFEGAME</div>
+    <div class="masthead-issue">QUEST BOARD</div>
+  </div>
+
+  <div class="kicker" id="quest-kicker">Your Quests</div>
+  <div class="headline" id="quest-headline" style="font-size:1.5rem;margin-bottom:4px;"></div>
+  <div class="dim" id="quest-subhead" style="margin-bottom:20px;"></div>
+
+  <div class="rule"></div>
+
+  <div id="quest-list"></div>
+
+  <div class="flex mt">
+    <button class="btn btn-sm" onclick="openRegenModal()">↻ &nbsp; Regenerate Quests</button>
+    <button class="btn btn-fill btn-sm grow" onclick="go('s-checkin')">📋 Daily Check-In</button>
+  </div>
+
+  <div class="rule-thin"></div>
+
+  <div class="flex" style="gap:8px;">
+    <button class="btn btn-sm grow" onclick="go('s-dashboard')">👤 Dashboard</button>
+    <button class="btn btn-sm grow" onclick="go('s-community')">📖 Community</button>
+  </div>
+</div>
+
+<!-- ══ DAILY CHECK-IN ═══════════════════════════════════════════ -->
+<div class="screen" id="s-checkin">
+  <div class="masthead">
+    <div class="masthead-title">LIFEGAME</div>
+    <div class="masthead-issue">DAY <span id="checkin-day-num">1</span></div>
+  </div>
+
+  <div class="kicker">Daily Log</div>
+  <div class="headline" style="font-size:1.5rem;">What happened today?</div>
+
+  <div style="margin-bottom:20px;">
+    <div class="streak-dots" id="streak-dots"></div>
+    <div class="mono" style="font-size:0.62rem;color:var(--muted);">STREAK · <span id="streak-count">0</span> DAY(S)</div>
+  </div>
+
+  <div class="rule"></div>
+
+  <label>Which quest did you work on?</label>
+  <select class="field" id="ci-quest"></select>
+
+  <label>What exactly did you do? (Be specific — this is your XP proof)</label>
+  <textarea class="field" id="ci-action" rows="3" placeholder="e.g. Spent 45 mins mixing a vocal track, experimented with compression ratio settings..."></textarea>
+
+  <label>What did you learn or realize?</label>
+  <textarea class="field" id="ci-learn" rows="2" placeholder="Even 'I realized I hate this' counts. Awareness = XP."></textarea>
+
+  <label>How did it feel? (Tap one)</label>
+  <div class="flex" style="gap:6px;margin-top:8px;flex-wrap:wrap;" id="mood-btns">
+    <button class="btn btn-sm" onclick="pickMood(this,'😤 Frustrated')">😤 Frustrated</button>
+    <button class="btn btn-sm" onclick="pickMood(this,'😐 Meh')">😐 Meh</button>
+    <button class="btn btn-sm" onclick="pickMood(this,'😊 Good')">😊 Good</button>
+    <button class="btn btn-sm" onclick="pickMood(this,'🔥 Fired Up')">🔥 Fired Up</button>
+    <button class="btn btn-sm" onclick="pickMood(this,'💪 Proud')">💪 Proud</button>
+  </div>
+
+  <div class="mt flex">
+    <button class="btn grow" onclick="go('s-quests')">← Back</button>
+    <button class="btn btn-accent grow" onclick="submitCheckin()">Submit &amp; Earn XP ⚡</button>
+  </div>
+</div>
+
+<!-- ══ DASHBOARD ════════════════════════════════════════════════ -->
+<div class="screen" id="s-dashboard">
+  <div class="masthead">
+    <div class="masthead-title">LIFEGAME</div>
+    <div class="masthead-issue">DASHBOARD</div>
+  </div>
+
+  <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:16px;">
+    <div style="font-size:3rem;line-height:1;" id="dash-avatar">🧑</div>
+    <div>
+      <div style="font-family:'Instrument Serif',serif;font-size:1.5rem;" id="dash-name">—</div>
+      <div class="mono" style="font-size:0.65rem;color:var(--accent);letter-spacing:0.15em;" id="dash-class">— CLASS —</div>
+      <div class="mono" style="font-size:0.62rem;color:var(--muted);">LEVEL <span id="dash-level">1</span> · <span id="dash-title">Novice</span></div>
+    </div>
+  </div>
+
+  <div class="xp-wrap">
+    <div class="xp-meta"><span>XP</span><span id="dash-xp-text">0 / 100</span></div>
+    <div class="xp-track"><div class="xp-fill" id="dash-xp-fill" style="width:0%"></div></div>
+  </div>
+
+  <div class="stat-grid" id="dash-stats">
+    <div class="stat-cell"><span class="stat-val" id="ds-craft">5</span><span class="stat-name">CRAFT</span></div>
+    <div class="stat-cell"><span class="stat-val" id="ds-focus">5</span><span class="stat-name">FOCUS</span></div>
+    <div class="stat-cell"><span class="stat-val" id="ds-grind">5</span><span class="stat-name">GRIND</span></div>
+    <div class="stat-cell"><span class="stat-val" id="ds-social">5</span><span class="stat-name">SOCIAL</span></div>
+    <div class="stat-cell"><span class="stat-val" id="ds-mind">5</span><span class="stat-name">MINDSET</span></div>
+    <div class="stat-cell"><span class="stat-val" id="ds-gold" style="color:var(--gold);">0</span><span class="stat-name">GOLD</span></div>
+  </div>
+
+  <div class="rule-thin"></div>
+
+  <div class="kicker">Big Vision</div>
+  <div class="serif" style="font-size:1.05rem;line-height:1.6;color:var(--muted);margin-bottom:16px;font-style:italic;" id="dash-vision">—</div>
+
+  <div id="dash-badges" style="margin-bottom:16px;"></div>
+
+  <div class="rule-thin"></div>
+
+  <div class="flex">
+    <button class="btn grow" onclick="go('s-landing')">← Home</button>
+    <button class="btn btn-fill grow" onclick="go('s-quests')">⚔️ Quests</button>
+  </div>
+</div>
+
+<!-- ══ COMMUNITY ════════════════════════════════════════════════ -->
+<div class="screen" id="s-community">
+  <div class="masthead">
+    <div class="masthead-title">LIFEGAME</div>
+    <div class="masthead-issue">COMMUNITY ROADMAPS</div>
+  </div>
+
+  <div class="nav-tabs">
+    <div class="nav-tab active" onclick="switchTab(this,'tab-browse')">Browse</div>
+    <div class="nav-tab" onclick="switchTab(this,'tab-submit')">Submit Yours</div>
+  </div>
+
+  <!-- BROWSE -->
+  <div id="tab-browse">
+    <div class="kicker">From The Community</div>
+    <p class="dim" style="margin-bottom:20px;">Real paths from real people. Click any story to generate quests based on their journey.</p>
+    <div id="community-list"></div>
+  </div>
+
+  <!-- SUBMIT -->
+  <div id="tab-submit" style="display:none;">
+    <div class="kicker">Share Your Journey</div>
+    <div class="headline" style="font-size:1.3rem;margin-bottom:8px;">You became something.<br>Help others get there too.</div>
+    <p class="dim" style="margin-bottom:20px;">Write your story — where you started, what you went through, how you got here. We'll extract quests from it.</p>
+
+    <div class="notice">
+      ✨ Contributors earn a <strong>Pathfinder</strong> badge + 50 Gold bonus on their character.
+    </div>
+
+    <label>Your Name / Alias</label>
+    <input type="text" id="contrib-name" placeholder="e.g. Ae, anonymous, @handle...">
+
+    <label>What Are You Now? (Job / Role)</label>
+    <input type="text" id="contrib-role" placeholder="e.g. Self-taught Sound Engineer">
+
+    <label>Where Did You Start?</label>
+    <input type="text" id="contrib-start" placeholder="e.g. High school grad with zero music knowledge">
+
+    <label>Your Story — The Full Journey</label>
+    <textarea class="field" id="contrib-story" rows="8"
+      placeholder="Write everything: what you did, what failed, what worked, what you wish you knew. The messier the better. This is real."></textarea>
+
+    <div class="mt flex">
+      <button class="btn btn-accent grow" onclick="submitStory()">
+        Submit Story &amp; Generate Quest Template
+      </button>
+    </div>
+    <div id="story-result" style="margin-top:16px;"></div>
+  </div>
+
+  <div class="rule-thin"></div>
+  <button class="btn" onclick="go('s-landing')">← Back</button>
+</div>
+
+</div><!-- /app -->
+
+<!-- REGEN MODAL -->
+<div class="modal-overlay" id="regen-modal">
+  <div class="modal-box">
+    <div class="modal-title">Regenerate Quests</div>
+    <p class="modal-sub">Before we generate new quests, help us understand. Why don't the current quests feel right?</p>
+    <label>Your Reason</label>
+    <textarea class="field" id="regen-reason" rows="3"
+      placeholder="e.g. Too easy for where I am now, I already did these, I want to focus more on networking..."></textarea>
+    <div class="mt flex">
+      <button class="btn grow" onclick="closeRegenModal()">Cancel</button>
+      <button class="btn btn-accent grow" onclick="confirmRegen()">Regenerate →</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast">Saved!</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════
+const STATE = {
+  player: {
+    name:'', job:'', vision:'', class:'', avatar:'🧑', title:'Novice',
+    level:1, xp:0, xpMax:100, gold:0, streak:0, day:1,
+    stats:{ craft:5, focus:5, grind:5, social:5, mind:5 },
+    badges:[], log:[]
+  },
+  quests: [],
+  chatHistory: [],
+  characterReady: false,
+  mood: '',
+  communityStories: [
+    {
+      name: 'Rian D.',
+      role: 'Self-taught Sound Engineer',
+      start: 'High school grad, no music background',
+      year: '3 years',
+      excerpt: 'Started with a cracked copy of FL Studio and YouTube tutorials at 19. Got my first paid gig mixing for a local indie band for Rp 150K. Now I mix for labels.',
+      quests: [
+        { title: 'Learn One DAW for 30 Days Straight', xp:60, diff:'med' },
+        { title: 'Mix a Track, Then Ask for Brutal Feedback', xp:50, diff:'med' },
+        { title: 'Reach Out to 3 Local Artists This Week', xp:40, diff:'easy' },
+      ]
+    },
+    {
+      name: 'Citra M.',
+      role: 'Freelance UI Designer',
+      start: 'Marketing grad who hated marketing',
+      year: '2 years',
+      excerpt: 'Graduated in Marketing, hated every internship. Spent 6 months doing design challenges on Figma every morning before work. Quit my job at month 7 when I had 3 freelance clients.',
+      quests: [
+        { title: 'Complete a Design Challenge Every Morning for 2 Weeks', xp:70, diff:'hard' },
+        { title: 'Redesign a Bad UI You Use Daily', xp:45, diff:'easy' },
+        { title: 'Get One Stranger to Review Your Portfolio', xp:35, diff:'med' },
+      ]
+    },
+    {
+      name: 'Anonymous',
+      role: 'Sober for 14 months',
+      start: '3-year addiction, rock bottom moment',
+      year: '14 months',
+      excerpt: "I won't share details but I want others to know: you can gamify recovery too. I tracked every sober day like XP. Made it a streak. When I hit 30 days I cried.",
+      quests: [
+        { title: 'Track One Sober Day — Just One', xp:30, diff:'easy' },
+        { title: 'Tell One Person About Your Goal', xp:40, diff:'hard' },
+        { title: 'Find Your Trigger Pattern — Write It Down', xp:50, diff:'med' },
+      ]
+    }
+  ]
+};
+
+// ═══════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════
+function go(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+  if (id === 's-dashboard') refreshDashboard();
+  if (id === 's-checkin') refreshCheckin();
+  if (id === 's-quests') refreshQuestBoard();
+  if (id === 's-community') renderCommunity();
+  if (id === 's-chat' && STATE.chatHistory.length === 0) initChat();
+}
+
+function switchTab(el, tabId) {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  ['tab-browse','tab-submit'].forEach(id => {
+    document.getElementById(id).style.display = (id === tabId) ? 'block' : 'none';
+  });
+}
+
+// ═══════════════════════════════════════════════════
+// CHAT ENGINE
+// ═══════════════════════════════════════════════════
+async function initChat() {
+  await addAIMsg("Hey. No forms here. Just tell me — what do you want to become? Dream big, don't filter yourself.");
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+async function sendMessage() {
+  const inp = document.getElementById('chat-input');
+  const text = inp.value.trim();
+  if (!text) return;
+  inp.value = ''; inp.style.height = 'auto';
+  document.getElementById('send-btn').disabled = true;
+
+  addUserMsg(text);
+  STATE.chatHistory.push({ role: 'user', content: text });
+
+  showTyping();
+  const reply = await callClaude_chat();
+  hideTyping();
+
+  document.getElementById('send-btn').disabled = false;
+
+  if (reply.done) {
+    await addAIMsg(reply.message);
+    addSystemMsg('✦ Character profile complete. Generating your quest board...');
+    setTimeout(() => generateQuests(), 1200);
+  } else {
+    await addAIMsg(reply.message);
+    // extract any data
+    if (reply.name) STATE.player.name = reply.name;
+    if (reply.job) STATE.player.job = reply.job;
+    if (reply.vision) STATE.player.vision = reply.vision;
+  }
+}
+
+async function callClaude_chat() {
+  const systemPrompt = `You are LIFEGAME's onboarding AI. Your job is to have a short, natural conversation to understand this person's:
+1. Name
+2. Current situation (job, education, skills)
+3. Their BIG dream / goal (even sensitive ones — porn addiction, mental health, relationships, finances — treat ALL with respect, zero judgment)
+4. Their current level toward that goal
+5. What's holding them back
+
+Rules:
+- Ask ONE question at a time. Never multiple questions in one message.
+- Be warm, direct, no fluff. Talk like a friend, not a therapist.
+- Keep messages short (2-4 sentences max)
+- After 4-6 exchanges when you have enough info, respond with a JSON object ONLY (no other text):
+{"done": true, "message": "short encouraging message to user", "name": "...", "job": "...", "vision": "...", "level": "brief description of current level"}
+
+Until then, respond with JSON: {"done": false, "message": "your next question"}
+
+IMPORTANT: Always return valid JSON only. No markdown, no extra text.`;
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 400,
+        system: systemPrompt,
+        messages: STATE.chatHistory
+      })
+    });
+    const data = await resp.json();
+    const raw = data.content[0].text.trim();
+    const clean = raw.replace(/```json|```/g,'').trim();
+    return JSON.parse(clean);
+  } catch(e) {
+    return { done: false, message: "Tell me more — what does that dream actually look like day to day?" };
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// QUEST GENERATION
+// ═══════════════════════════════════════════════════
+async function generateQuests(regenReason = null) {
+  const p = STATE.player;
+  const systemPrompt = `You are LIFEGAME's quest engine. Generate a personalized quest board for a real person.
+
+OUTPUT: Return ONLY a valid JSON object, no markdown, no extra text.
+
+{
+  "characterClass": "creative class name based on their path",
+  "avatar": "single emoji representing them",
+  "title": "one-word title (Apprentice, Seeker, Builder, etc)",
+  "vision": "one-sentence version of their big goal",
+  "quests": [
+    {
+      "id": 1,
+      "title": "Quest title",
+      "type": "main|side|daily",
+      "difficulty": "easy|medium|hard",
+      "description": "What exactly to do. Specific and actionable.",
+      "why": "One sentence — WHY this matters for their specific goal",
+      "xp": 30,
+      "gold": 10,
+      "skill": "What skill/stat it builds"
+    }
+  ]
+}
+
+Rules:
+- Generate 5-7 quests
+- Mix of easy (starting quests), medium and one hard quest
+- Quests should be specific to their actual situation, not generic
+- If their goal is sensitive (addiction, mental health, relationships), generate REAL helpful quests with compassion
+- XP: easy=20-35, medium=40-65, hard=70-100
+- Gold: easy=5-15, medium=15-25, hard=25-40
+- The easiest quest should be completable TODAY within 30 minutes
+${regenReason ? `\nREGEN REASON: User said "${regenReason}". Adjust quests accordingly. Make them more relevant.` : ''}`;
+
+  // Gather context from chat
+  const context = STATE.chatHistory.map(m => `${m.role}: ${m.content}`).join('\n');
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 1200,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: `Player profile from conversation:\n${context}` }]
+      })
+    });
+    const data = await resp.json();
+    const raw = data.content[0].text.trim().replace(/```json|```/g,'').trim();
+    const result = JSON.parse(raw);
+
+    STATE.player.class = result.characterClass || 'Wanderer';
+    STATE.player.avatar = result.avatar || '🧑';
+    STATE.player.title = result.title || 'Seeker';
+    if (result.vision) STATE.player.vision = result.vision;
+    STATE.quests = result.quests || [];
+    STATE.characterReady = true;
+
+    // Assign starting badges
+    STATE.player.badges = ['🆕 Day One', '💭 Visionary'];
+
+    go('s-quests');
+    toast('✦ Quest board ready!');
+  } catch(e) {
+    // Fallback quests
+    STATE.quests = [
+      { id:1, title:'Write Your "Level 10" Vision', type:'side', difficulty:'easy', description:'Spend 20 minutes writing what your ideal life looks like in detail. Be specific about what you do, feel, and earn.', why:'Clarity of vision is the first skill of every successful person.', xp:25, gold:8, skill:'Mindset +1' },
+      { id:2, title:'Find One Person Already Living Your Dream', type:'main', difficulty:'easy', description:'Research one person 5 years ahead of you on your path. Study their journey for 30 minutes.', why:'Someone already solved the puzzle you\'re working on.', xp:30, gold:10, skill:'Focus +1' },
+      { id:3, title:'Take One Concrete Action Today', type:'main', difficulty:'medium', description:'Based on your goal, do one specific thing today. Not research — a real action.', why:'Action beats preparation. Always.', xp:50, gold:15, skill:'Craft +1' }
+    ];
+    STATE.characterReady = true;
+    go('s-quests');
+  }
+}
+
+function refreshQuestBoard() {
+  const p = STATE.player;
+  document.getElementById('quest-kicker').textContent = `${p.class || 'Your'} Quest Board`;
+  document.getElementById('quest-headline').textContent = p.name ? `${p.name}'s Quests` : 'Your Quests';
+  document.getElementById('quest-subhead').textContent = p.vision ? `"${p.vision}"` : '';
+
+  const list = document.getElementById('quest-list');
+  if (!STATE.quests.length) {
+    list.innerHTML = '<div class="notice">No quests yet. Complete onboarding to generate your quest board.</div>';
+    return;
+  }
+
+  list.innerHTML = STATE.quests.map(q => {
+    const typeLabel = q.type === 'main' ? 'MAIN QUEST' : q.type === 'daily' ? 'DAILY' : 'SIDE QUEST';
+    const diffClass = q.difficulty === 'easy' ? 'tag-diff-easy' : q.difficulty === 'hard' ? 'tag-diff-hard' : 'tag-diff-med';
+    const doneStyle = q.done ? 'opacity:0.5;' : '';
+    const doneLabel = q.done ? '<span style="float:right;font-size:0.8rem;">✅</span>' : '';
+    return `
+    <div class="quest-col" style="${doneStyle}">
+      ${doneLabel}
+      <div class="quest-col-type">${typeLabel}</div>
+      <div class="quest-col-title">${q.title}</div>
+      <div class="quest-col-desc">${q.description}</div>
+      <div class="dim" style="font-size:0.78rem;font-style:italic;margin-bottom:10px;border-left:2px solid var(--border);padding-left:8px;">${q.why}</div>
+      <div class="quest-col-footer">
+        <span class="tag tag-xp">+${q.xp} XP</span>
+        <span class="tag tag-gold">+${q.gold}G</span>
+        <span class="tag tag-skill">${q.skill}</span>
+        <span class="tag ${diffClass}">${q.difficulty.toUpperCase()}</span>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Fill checkin select
+  const sel = document.getElementById('ci-quest');
+  if (sel) sel.innerHTML = STATE.quests.map(q => `<option value="${q.id}">${q.title}</option>`).join('');
+}
+
+// ═══════════════════════════════════════════════════
+// REGEN
+// ═══════════════════════════════════════════════════
+function openRegenModal() { document.getElementById('regen-modal').classList.add('open'); }
+function closeRegenModal() { document.getElementById('regen-modal').classList.remove('open'); document.getElementById('regen-reason').value=''; }
+async function confirmRegen() {
+  const reason = document.getElementById('regen-reason').value.trim();
+  if (!reason) { toast('⚠ Tell us why first'); return; }
+  closeRegenModal();
+  toast('Regenerating quests...');
+  // Show loading state
+  document.getElementById('quest-list').innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted);"><div class="spinner"></div><div style="margin-top:12px;font-size:0.82rem;">Generating new quests...</div></div>';
+  await generateQuests(reason);
+  refreshQuestBoard();
+  toast('✦ New quests generated!');
+}
+
+// ═══════════════════════════════════════════════════
+// CHECKIN
+// ═══════════════════════════════════════════════════
+function pickMood(btn, val) {
+  document.querySelectorAll('#mood-btns .btn').forEach(b => b.classList.remove('btn-fill'));
+  btn.classList.add('btn-fill');
+  STATE.mood = val;
+}
+
+function refreshCheckin() {
+  document.getElementById('checkin-day-num').textContent = STATE.player.day;
+  document.getElementById('streak-count').textContent = STATE.player.streak;
+  const dots = document.getElementById('streak-dots');
+  dots.innerHTML = Array.from({length:7},(_,i) =>
+    `<div class="sd ${i < STATE.player.streak ? 'lit' : ''}">${i+1}</div>`).join('');
+  const sel = document.getElementById('ci-quest');
+  sel.innerHTML = STATE.quests.map(q => `<option value="${q.id}">${q.title}</option>`).join('');
+}
+
+async function submitCheckin() {
+  const qid = parseInt(document.getElementById('ci-quest').value);
+  const action = document.getElementById('ci-action').value.trim();
+  const learn = document.getElementById('ci-learn').value.trim();
+  if (!action) { toast('⚠ Tell us what you did!'); return; }
+  if (!STATE.mood) { toast('⚠ Pick a mood!'); return; }
+
+  const q = STATE.quests.find(x => x.id === qid);
+  const xpGain = q ? Math.floor(q.xp * 0.55) : 20;
+  const goldGain = q ? Math.floor(q.gold * 0.5) : 5;
+
+  STATE.player.xp += xpGain;
+  STATE.player.gold += goldGain;
+  STATE.player.streak++;
+  STATE.player.day++;
+
+  // Level up
+  while (STATE.player.xp >= STATE.player.xpMax) {
+    STATE.player.xp -= STATE.player.xpMax;
+    STATE.player.level++;
+    STATE.player.xpMax = Math.floor(STATE.player.xpMax * 1.5);
+    const keys = Object.keys(STATE.player.stats);
+    STATE.player.stats[keys[Math.floor(Math.random()*keys.length)]]++;
+  }
+
+  if (q) { q._count = (q._count||0)+1; if(q._count >= (q.difficulty==='easy'?1:2)) q.done=true; }
+
+  // Streak badges
+  if (STATE.player.streak===3) STATE.player.badges.push('🔥 3-Day Streak');
+  if (STATE.player.streak===7) STATE.player.badges.push('⚡ Week Warrior');
+
+  STATE.player.log.push({ day:STATE.player.day, quest:q?.title, action, learn, mood:STATE.mood });
+
+  // Get AI insight
+  const insight = await getCheckinInsight(action, learn, STATE.mood, q?.title);
+
+  document.getElementById('ci-action').value='';
+  document.getElementById('ci-learn').value='';
+  document.querySelectorAll('#mood-btns .btn').forEach(b=>b.classList.remove('btn-fill'));
+  STATE.mood = '';
+
+  // Show reward via dashboard
+  toast(`+${xpGain} XP · +${goldGain}G earned!`);
+  refreshDashboard();
+
+  // Show insight in a little overlay over quest screen
+  go('s-quests');
+  refreshQuestBoard();
+
+  // Append insight to quest board
+  const insightEl = document.createElement('div');
+  insightEl.className = 'notice';
+  insightEl.style.marginTop = '16px';
+  insightEl.style.borderLeft = '3px solid var(--green2)';
+  insightEl.innerHTML = `<strong style="font-size:0.72rem;font-family:'Syne Mono',monospace;letter-spacing:0.1em;">TODAY'S INSIGHT</strong><br><span style="font-family:'Instrument Serif',serif;font-style:italic;">${insight}</span>`;
+  document.getElementById('quest-list').prepend(insightEl);
+}
+
+async function getCheckinInsight(action, learn, mood, questName) {
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-haiku-4-5-20251001',
+        max_tokens:150,
+        messages:[{
+          role:'user',
+          content:`A player just logged their day: they worked on "${questName}", did "${action}", learned "${learn}", and felt "${mood}". Write ONE short, specific, genuine insight or encouragement (2-3 sentences max). Talk directly to them. Be real, not generic.`
+        }]
+      })
+    });
+    const data = await resp.json();
+    return data.content[0].text.trim();
+  } catch(e) {
+    return "You showed up. That's already more than most people manage. Keep going.";
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════════════
+function refreshDashboard() {
+  const p = STATE.player;
+  document.getElementById('dash-avatar').textContent = p.avatar;
+  document.getElementById('dash-name').textContent = p.name || 'Adventurer';
+  document.getElementById('dash-class').textContent = p.class || '—';
+  document.getElementById('dash-level').textContent = p.level;
+  document.getElementById('dash-title').textContent = p.title;
+  document.getElementById('dash-xp-text').textContent = `${p.xp} / ${p.xpMax}`;
+  document.getElementById('dash-xp-fill').style.width = (p.xp/p.xpMax*100)+'%';
+  document.getElementById('dash-vision').textContent = p.vision ? `"${p.vision}"` : '—';
+  document.getElementById('ds-craft').textContent = p.stats.craft;
+  document.getElementById('ds-focus').textContent = p.stats.focus;
+  document.getElementById('ds-grind').textContent = p.stats.grind;
+  document.getElementById('ds-social').textContent = p.stats.social;
+  document.getElementById('ds-mind').textContent = p.stats.mind;
+  document.getElementById('ds-gold').textContent = p.gold;
+  document.getElementById('dash-badges').innerHTML = p.badges.map(b =>
+    `<span class="badge earned">${b}</span>`).join('') || '<span class="badge">No badges yet</span>';
+}
+
+// ═══════════════════════════════════════════════════
+// COMMUNITY
+// ═══════════════════════════════════════════════════
+function renderCommunity() {
+  const list = document.getElementById('community-list');
+  list.innerHTML = STATE.communityStories.map((s,i) => `
+    <div class="story-card">
+      <div class="story-card-name">${s.name}</div>
+      <div class="story-card-meta">${s.role} · Started as: ${s.start} · ${s.year} journey</div>
+      <div class="story-card-excerpt">"${s.excerpt}"</div>
+      <div class="flex" style="gap:6px;flex-wrap:wrap;margin-bottom:10px;">
+        ${s.quests.map(q=>`<span class="tag tag-xp" style="font-size:0.58rem;">${q.title}</span>`).join('')}
+      </div>
+      <button class="btn btn-sm" onclick="loadCommunityQuests(${i})">
+        Use This Roadmap →
+      </button>
+    </div>
+  `).join('');
+}
+
+function loadCommunityQuests(idx) {
+  const s = STATE.communityStories[idx];
+  STATE.quests = s.quests.map((q,i) => ({
+    id: i+1,
+    title: q.title,
+    type: 'main',
+    difficulty: q.diff || 'medium',
+    description: `Based on ${s.name}'s actual journey as ${s.role}.`,
+    why: `${s.name} said this was a turning point.`,
+    xp: q.xp,
+    gold: Math.floor(q.xp/3),
+    skill: 'Craft +1',
+    done: false
+  }));
+  STATE.player.vision = STATE.player.vision || `Become a ${s.role}`;
+  STATE.characterReady = true;
+  toast(`Loaded ${s.name}'s roadmap!`);
+  go('s-quests');
+}
+
+async function submitStory() {
+  const name = document.getElementById('contrib-name').value.trim();
+  const role = document.getElementById('contrib-role').value.trim();
+  const start = document.getElementById('contrib-start').value.trim();
+  const story = document.getElementById('contrib-story').value.trim();
+
+  if (!role || !story || story.length < 80) {
+    toast('⚠ Write more of your story — the more detail, the better the quests!');
+    return;
+  }
+
+  const resultEl = document.getElementById('story-result');
+  resultEl.innerHTML = '<div style="text-align:center;padding:20px;"><div class="spinner"></div><div style="margin-top:10px;font-size:0.8rem;color:var(--muted);">Extracting quests from your journey...</div></div>';
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-haiku-4-5-20251001',
+        max_tokens:800,
+        messages:[{
+          role:'user',
+          content:`Someone submitted their real-life journey. Extract 4-5 actionable quests from it.
+
+Name: ${name || 'Anonymous'}
+Current role: ${role}
+Started from: ${start}
+Their story: ${story}
+
+Return ONLY valid JSON:
+{
+  "quests": [
+    {"title":"quest title","description":"specific action","xp":40,"diff":"easy|medium|hard","insight":"one sentence from their story"}
+  ]
+}
+
+Make quests specific, based on what they actually did. Use their language.`
+        }]
+      })
+    });
+    const data = await resp.json();
+    const raw = data.content[0].text.trim().replace(/```json|```/g,'').trim();
+    const result = JSON.parse(raw);
+
+    // Add to community stories
+    STATE.communityStories.push({
+      name: name || 'Anonymous',
+      role, start: start || 'Unknown',
+      year: 'Unknown',
+      excerpt: story.substring(0, 180) + '...',
+      quests: result.quests.map(q => ({ title: q.title, xp: q.xp, diff: q.diff }))
+    });
+
+    // Award contributor
+    STATE.player.gold += 50;
+    if (!STATE.player.badges.includes('🗺️ Pathfinder')) STATE.player.badges.push('🗺️ Pathfinder');
+
+    resultEl.innerHTML = `
+      <div class="notice" style="border-left-color:var(--green2);">
+        <strong>✦ ${result.quests.length} quests extracted from your story!</strong><br>
+        <span class="dim">Your roadmap has been added to the community. You earned +50 Gold and the Pathfinder badge.</span>
+        <div style="margin-top:10px;">
+          ${result.quests.map(q=>`<div style="padding:4px 0;font-size:0.82rem;">⚔️ ${q.title}</div>`).join('')}
+        </div>
+      </div>`;
+
+    refreshDashboard();
+    toast('✦ Story submitted! +50 Gold earned');
+  } catch(e) {
+    resultEl.innerHTML = '<div class="notice">Failed to extract quests. Try again.</div>';
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// CHAT UI HELPERS
+// ═══════════════════════════════════════════════════
+function addUserMsg(text) {
+  const area = document.getElementById('chat-area');
+  const el = document.createElement('div');
+  el.className = 'msg msg-user';
+  el.innerHTML = `<div class="bubble">${escHtml(text)}</div>`;
+  area.appendChild(el);
+  area.scrollTop = area.scrollHeight;
+}
+
+async function addAIMsg(text) {
+  const area = document.getElementById('chat-area');
+  const el = document.createElement('div');
+  el.className = 'msg msg-ai';
+  el.innerHTML = `<div class="sender">LIFEGAME AI</div><div class="bubble"></div>`;
+  area.appendChild(el);
+  // Typewriter
+  const bubble = el.querySelector('.bubble');
+  for (let i=0; i<text.length; i++) {
+    bubble.textContent += text[i];
+    area.scrollTop = area.scrollHeight;
+    await sleep(18);
+  }
+}
+
+function addSystemMsg(text) {
+  const area = document.getElementById('chat-area');
+  const el = document.createElement('div');
+  el.className = 'msg msg-system';
+  el.innerHTML = `<div class="bubble">${escHtml(text)}</div>`;
+  area.appendChild(el);
+  area.scrollTop = area.scrollHeight;
+}
+
+let typingEl = null;
+function showTyping() {
+  const area = document.getElementById('chat-area');
+  typingEl = document.createElement('div');
+  typingEl.className = 'msg msg-ai typing';
+  typingEl.innerHTML = `<div class="bubble"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>`;
+  area.appendChild(typingEl);
+  area.scrollTop = area.scrollHeight;
+}
+function hideTyping() { if(typingEl) { typingEl.remove(); typingEl=null; } }
+
+// ═══════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════
+function escHtml(t) { return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2800);
+}
+</script>
+</body>
+</html>
