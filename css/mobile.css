@@ -1,0 +1,51 @@
+/* ── MOBILE & PWA ─────────────────────────────────────── */
+
+/* Viewport height fix for mobile browsers (address bar shrinkage) */
+body {
+  min-height: 100dvh;
+  min-height: 100vh; /* fallback */
+}
+
+/* Safe area insets for notch / home indicator (iPhone) */
+#app {
+  padding-bottom: calc(60px + env(safe-area-inset-bottom));
+}
+
+/* Toast above home indicator */
+#toast {
+  bottom: calc(20px + env(safe-area-inset-bottom));
+}
+
+/* Smooth scrolling on iOS for chat */
+.chat-area {
+  -webkit-overflow-scrolling: touch;
+  overflow-y: auto;
+}
+
+/* ── RESPONSIVE ───────────────────────────────────────── */
+@media (max-width: 480px) {
+  .headline { font-size: 1.7rem; }
+  .stat-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Ensure quest footer tags wrap nicely */
+  .quest-col-footer { gap: 6px; }
+
+  /* Full-width modal on small screens */
+  .modal-box { padding: 20px; }
+}
+
+@media (max-width: 360px) {
+  #app { padding: 16px 14px calc(50px + env(safe-area-inset-bottom)); }
+  .masthead-title { font-size: 1.3rem; }
+}
+
+/* ── HOVER STATES: only on devices that support hover ─── */
+/* Prevents sticky hover on mobile tap */
+@media (hover: none) {
+  .btn:hover { background: transparent; color: var(--ink); }
+  .btn-fill:hover { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+  .btn-accent:hover { background: var(--accent); border-color: var(--accent); }
+  .quest-col:hover { box-shadow: none; }
+  .send-btn:hover { background: var(--ink); }
+  .nav-tab:hover { color: var(--muted); }
+}

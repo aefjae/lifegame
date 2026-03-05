@@ -1,0 +1,30 @@
+label {
+  display: block;
+  font-family: 'Syne Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  margin-bottom: 6px;
+  margin-top: 16px;
+}
+
+input[type=text], textarea.field, select.field {
+  width: 100%;
+  background: var(--paper2);
+  border: 1px solid var(--border);
+  border-bottom: 2px solid var(--ink);
+  padding: 10px 12px;
+  font-family: 'Syne', sans-serif;
+  font-size: 16px; /* prevents iOS auto-zoom on focus */
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.15s;
+  border-radius: 0;
+}
+
+input:focus, textarea.field:focus, select.field:focus {
+  border-color: var(--accent);
+  background: #fff;
+}
+
+textarea.field { resize: none; line-height: 1.55; }

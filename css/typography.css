@@ -1,0 +1,52 @@
+/* HEADER */
+.masthead {
+  border-bottom: 2px solid var(--ink);
+  padding-bottom: 12px;
+  margin-bottom: 32px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.masthead-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.6rem;
+  letter-spacing: -0.02em;
+}
+.masthead-issue {
+  font-family: 'Syne Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+
+/* EDITORIAL ELEMENTS */
+.kicker {
+  font-family: 'Syne Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.headline {
+  font-family: 'Instrument Serif', serif;
+  font-size: 2.2rem;
+  line-height: 1.15;
+  margin-bottom: 12px;
+  letter-spacing: -0.01em;
+}
+
+.subhead {
+  font-size: 1rem;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 24px;
+  font-weight: 400;
+}
+
+/* RULES */
+.rule { height: 2px; background: var(--ink); margin: 24px 0; }
+.rule-thin { height: 1px; background: var(--border); margin: 20px 0; }
+.rule-dotted { height: 1px; border-top: 1px dashed var(--border2); margin: 16px 0; }

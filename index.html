@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>LIFEGAME</title>
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0e0e0f">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Syne+Mono&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+<!-- Styles (tokens must load first) -->
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/typography.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/chat.css">
+<link rel="stylesheet" href="css/cards.css">
+<link rel="stylesheet" href="css/forms.css">
+<link rel="stylesheet" href="css/feedback.css">
+<link rel="stylesheet" href="css/mobile.css">
+</head>
+<body>
+<div id="app">
+
+<!-- ══ LANDING ══════════════════════════════════════════════════ -->
+<div class="screen active" id="s-landing">
+  <div class="masthead">
+    <div class="masthead-title">LIFEGAME</div>
+    <div class="masthead-issue">PROTOTYPE · ISSUE 001</div>
+  </div>
+
+  <div class="kicker">Your Life. Gamified.</div>
+  <div class="headline">Stop staring at<br><em>Level 10.</em></div>
+  <p class="subhead">Tell us what you want to become. We'll break it into quests you can start today — not someday.</p>
+
+  <div class="rule"></div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:28px;">
+    <div style="background:var(--paper);padding:16px 12px;text-align:center;">
+      <div style="font-size:1.5rem;margin-bottom:6px;">💬</div>
+      <div style="font-size:0.8rem;font-weight:700;margin-bottom:3px;">Just Talk</div>
+      <div class="dim" style="font-size:0.72rem;">AI asks until it understands</div>
+    </div>
+    <div style="background:var(--paper);padding:16px 12px;text-align:center;">
+      <div style="font-size:1.5rem;margin-bottom:6px;">⚔️</div>
+      <div style="font-size:0.8rem;font-weight:700;margin-bottom:3px;">Get Quests</div>
+      <div class="dim" style="font-size:0.72rem;">Calibrated to your level</div>
+    </div>
+    <div style="background:var(--paper);padding:16px 12px;text-align:center;">
+      <div style="font-size:1.5rem;margin-bottom:6px;">📈</div>
+      <div style="font-size:0.8rem;font-weight:700;margin-bottom:3px;">Level Up</div>
+      <div class="dim" style="font-size:0.72rem;">Daily check-ins build streaks</div>
+    </div>
+  </div>
+
+  <button class="btn btn-fill btn-block" onclick="go('s-chat')">▶ &nbsp; Start Your Journey</button>
+
+  <div class="rule-thin"></div>
+
+  <div class="flex" style="gap:8px;margin-top:4px;">
+    <button class="btn grow" style="font-size:0.78rem;" onclick="go('s-community')">📖 Community Roadmaps</button>
+    <button class="btn grow" style="font-size:0.78rem;" onclick="go('s-dashboard')">👤 My Dashboard</button>
+  </div>
+</div>
+
+<!-- ══ CHAT ONBOARDING ══════════════════════════════════════════ -->
+<div class="screen" id="s-chat">
+  <div class="masthead">
+    <div class="masthead-title">LIFEGAME</div>
+    <div class="masthead-issue mono" style="font-size:0.6rem;color:var(--accent);" id="chat-status">CONVERSATION</div>
+  </div>
+
+  <div class="kicker">Character Creation</div>
+  <div style="font-family:'Instrument Serif',serif;font-size:1.3rem;margin-bottom:20px;">
+    Tell us about yourself. No forms — just talk.
+  </div>
+
+  <div class="notice">
+    🔒 This is a safe space. You can share anything — goals, struggles, even things you'd never say out loud. No judgment.
+  </div>
+
+  <div class="rule-thin"></div>
+
+  <div class="chat-area" id="chat-area"></div>
+
+  <div class="input-row">
+    <textarea class="chat-input" id="chat-input" placeholder="Type your answer..." rows="1"
+      onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+    <button class="send-btn" id="send-btn" onclick="sendMessage()">↑</button>
+  </div>
+</div>
+
+<!-- ══ QUEST BOARD ══════════════════════════════════════════════ -->
+<div class="screen" id="s-quests">
+  <div class="masthead">
+    <div class="masthead-title">LIFEGAME</div>
+    <div class="masthead-issue">QUEST BOARD</div>
+  </div>
+
+  <div class="kicker" id="quest-kicker">Your Quests</div>
+  <div class="headline" id="quest-headline" style="font-size:1.5rem;margin-bottom:4px;"></div>
+  <div class="dim" id="quest-subhead" style="margin-bottom:20px;"></div>
+
+  <div class="rule"></div>
+
+  <div id="quest-list"></div>
+
+  <div class="flex mt">
+    <button class="btn btn-sm" onclick="openRegenModal()">↻ &nbsp; Regenerate Quests</button>
+    <button class="btn btn-fill btn-sm grow" onclick="go('s-checkin')">📋 Daily Check-In</button>
+  </div>
+
+  <div class="rule-thin"></div>
+
+  <div class="flex" style="gap:8px;">
+    <button class="btn btn-sm grow" onclick="go('s-dashboard')">👤 Dashboard</button>
+    <button class="btn btn-sm grow" onclick="go('s-community')">📖 Community</button>
+  </div>
+</div>
+
+<!-- ══ DAILY CHECK-IN ═══════════════════════════════════════════ -->
+<div class="screen" id="s-checkin">
+  <div class="masthead">
+    <div class="masthead-title">LIFEGAME</div>
+    <div class="masthead-issue">DAY <span id="checkin-day-num">1</span></div>
+  </div>
+
+  <div class="kicker">Daily Log</div>
+  <div class="headline" style="font-size:1.5rem;">What happened today?</div>
+
+  <div style="margin-bottom:20px;">
+    <div class="streak-dots" id="streak-dots"></div>
+    <div class="mono" style="font-size:0.62rem;color:var(--muted);">STREAK · <span id="streak-count">0</span> DAY(S)</div>
+  </div>
+
+  <div class="rule"></div>
+
+  <label>Which quest did you work on?</label>
+  <select class="field" id="ci-quest"></select>
+
+  <label>What exactly did you do? (Be specific — this is your XP proof)</label>
+  <textarea class="field" id="ci-action" rows="3" placeholder="e.g. Spent 45 mins mixing a vocal track, experimented with compression ratio settings..."></textarea>
+
+  <label>What did you learn or realize?</label>
+  <textarea class="field" id="ci-learn" rows="2" placeholder="Even 'I realized I hate this' counts. Awareness = XP."></textarea>
+
+  <label>How did it feel? (Tap one)</label>
+  <div class="flex" style="gap:6px;margin-top:8px;flex-wrap:wrap;" id="mood-btns">
+    <button class="btn btn-sm" onclick="pickMood(this,'😤 Frustrated')">😤 Frustrated</button>
+    <button class="btn btn-sm" onclick="pickMood(this,'😐 Meh')">😐 Meh</button>
+    <button class="btn btn-sm" onclick="pickMood(this,'😊 Good')">😊 Good</button>
+    <button class="btn btn-sm" onclick="pickMood(this,'🔥 Fired Up')">🔥 Fired Up</button>
+    <button class="btn btn-sm" onclick="pickMood(this,'💪 Proud')">💪 Proud</button>
+  </div>
+
+  <div class="mt flex">
+    <button class="btn grow" onclick="go('s-quests')">← Back</button>
+    <button class="btn btn-accent grow" onclick="submitCheckin()">Submit &amp; Earn XP ⚡</button>
+  </div>
+</div>
+
+<!-- ══ DASHBOARD ════════════════════════════════════════════════ -->
+<div class="screen" id="s-dashboard">
+  <div class="masthead">
+    <div class="masthead-title">LIFEGAME</div>
+    <div class="masthead-issue">DASHBOARD</div>
+  </div>
+
+  <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:16px;">
+    <div style="font-size:3rem;line-height:1;" id="dash-avatar">🧑</div>
+    <div>
+      <div style="font-family:'Instrument Serif',serif;font-size:1.5rem;" id="dash-name">—</div>
+      <div class="mono" style="font-size:0.65rem;color:var(--accent);letter-spacing:0.15em;" id="dash-class">— CLASS —</div>
+      <div class="mono" style="font-size:0.62rem;color:var(--muted);">LEVEL <span id="dash-level">1</span> · <span id="dash-title">Novice</span></div>
+    </div>
+  </div>
+
+  <div class="xp-wrap">
+    <div class="xp-meta"><span>XP</span><span id="dash-xp-text">0 / 100</span></div>
+    <div class="xp-track"><div class="xp-fill" id="dash-xp-fill" style="width:0%"></div></div>
+  </div>
+
+  <div class="stat-grid" id="dash-stats">
+    <div class="stat-cell"><span class="stat-val" id="ds-craft">5</span><span class="stat-name">CRAFT</span></div>
+    <div class="stat-cell"><span class="stat-val" id="ds-focus">5</span><span class="stat-name">FOCUS</span></div>
+    <div class="stat-cell"><span class="stat-val" id="ds-grind">5</span><span class="stat-name">GRIND</span></div>
+    <div class="stat-cell"><span class="stat-val" id="ds-social">5</span><span class="stat-name">SOCIAL</span></div>
+    <div class="stat-cell"><span class="stat-val" id="ds-mind">5</span><span class="stat-name">MINDSET</span></div>
+    <div class="stat-cell"><span class="stat-val" id="ds-gold" style="color:var(--gold);">0</span><span class="stat-name">GOLD</span></div>
+  </div>
+
+  <div class="rule-thin"></div>
+
+  <div class="kicker">Big Vision</div>
+  <div class="serif" style="font-size:1.05rem;line-height:1.6;color:var(--muted);margin-bottom:16px;font-style:italic;" id="dash-vision">—</div>
+
+  <div id="dash-badges" style="margin-bottom:16px;"></div>
+
+  <div class="rule-thin"></div>
+
+  <div class="flex">
+    <button class="btn grow" onclick="go('s-landing')">← Home</button>
+    <button class="btn btn-fill grow" onclick="go('s-quests')">⚔️ Quests</button>
+  </div>
+</div>
+
+<!-- ══ COMMUNITY ════════════════════════════════════════════════ -->
+<div class="screen" id="s-community">
+  <div class="masthead">
+    <div class="masthead-title">LIFEGAME</div>
+    <div class="masthead-issue">COMMUNITY ROADMAPS</div>
+  </div>
+
+  <div class="nav-tabs">
+    <div class="nav-tab active" onclick="switchTab(this,'tab-browse')">Browse</div>
+    <div class="nav-tab" onclick="switchTab(this,'tab-submit')">Submit Yours</div>
+  </div>
+
+  <!-- BROWSE -->
+  <div id="tab-browse">
+    <div class="kicker">From The Community</div>
+    <p class="dim" style="margin-bottom:20px;">Real paths from real people. Click any story to generate quests based on their journey.</p>
+    <div id="community-list"></div>
+  </div>
+
+  <!-- SUBMIT -->
+  <div id="tab-submit" style="display:none;">
+    <div class="kicker">Share Your Journey</div>
+    <div class="headline" style="font-size:1.3rem;margin-bottom:8px;">You became something.<br>Help others get there too.</div>
+    <p class="dim" style="margin-bottom:20px;">Write your story — where you started, what you went through, how you got here. We'll extract quests from it.</p>
+
+    <div class="notice">
+      ✨ Contributors earn a <strong>Pathfinder</strong> badge + 50 Gold bonus on their character.
+    </div>
+
+    <label>Your Name / Alias</label>
+    <input type="text" id="contrib-name" placeholder="e.g. Ae, anonymous, @handle...">
+
+    <label>What Are You Now? (Job / Role)</label>
+    <input type="text" id="contrib-role" placeholder="e.g. Self-taught Sound Engineer">
+
+    <label>Where Did You Start?</label>
+    <input type="text" id="contrib-start" placeholder="e.g. High school grad with zero music knowledge">
+
+    <label>Your Story — The Full Journey</label>
+    <textarea class="field" id="contrib-story" rows="8"
+      placeholder="Write everything: what you did, what failed, what worked, what you wish you knew. The messier the better. This is real."></textarea>
+
+    <div class="mt flex">
+      <button class="btn btn-accent grow" onclick="submitStory()">
+        Submit Story &amp; Generate Quest Template
+      </button>
+    </div>
+    <div id="story-result" style="margin-top:16px;"></div>
+  </div>
+
+  <div class="rule-thin"></div>
+  <button class="btn" onclick="go('s-landing')">← Back</button>
+</div>
+
+</div><!-- /app -->
+
+<!-- REGEN MODAL -->
+<div class="modal-overlay" id="regen-modal">
+  <div class="modal-box">
+    <div class="modal-title">Regenerate Quests</div>
+    <p class="modal-sub">Before we generate new quests, help us understand. Why don't the current quests feel right?</p>
+    <label>Your Reason</label>
+    <textarea class="field" id="regen-reason" rows="3"
+      placeholder="e.g. Too easy for where I am now, I already did these, I want to focus more on networking..."></textarea>
+    <div class="mt flex">
+      <button class="btn grow" onclick="closeRegenModal()">Cancel</button>
+      <button class="btn btn-accent grow" onclick="confirmRegen()">Regenerate →</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast">Saved!</div>
+
+<!-- Scripts (load order matters: utils → state → api → router → feature modules) -->
+<script src="js/utils.js"></script>
+<script src="js/state.js"></script>
+<script src="js/api.js"></script>
+<script src="js/router.js"></script>
+<script src="js/chat.js"></script>
+<script src="js/quests.js"></script>
+<script src="js/checkin.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/community.js"></script>
+
+<!-- Service Worker registration -->
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js');
+  }
+</script>
+</body>
+</html>

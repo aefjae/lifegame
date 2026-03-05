@@ -1,0 +1,19 @@
+:root {
+  --ink: #0e0e0f;
+  --paper: #f5f0e8;
+  --paper2: #ede8df;
+  --accent: #c8410a;
+  --accent2: #e85d20;
+  --gold: #b8860b;
+  --gold2: #d4a017;
+  --blue: #1a3a6b;
+  --blue2: #2456a4;
+  --green: #1a5c3a;
+  --green2: #2d8a56;
+  --muted: #8a8070;
+  --border: #d0c8b8;
+  --border2: #b8b0a0;
+  --shadow: rgba(14,14,15,0.12);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
