@@ -49,25 +49,74 @@
   background: rgba(255, 255, 255, 0.06);
 }
 
+/* ── Wordmark ─────────────────────────────────────────────────── */
+
+.ls-wordmark {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 0.8rem;
+  letter-spacing: 0.3em;
+  color: rgba(255, 255, 255, 0.35);
+  margin-bottom: 28px;
+  text-transform: uppercase;
+}
+
 /* ── Typography ───────────────────────────────────────────────── */
 
 .ls-headline {
   font-family: 'Outfit', sans-serif;
   font-weight: 600;
-  font-size: clamp(1.9rem, 5.5vw, 3rem);
+  font-size: clamp(2.4rem, 6vw, 4rem);
   color: #fff;
-  line-height: 1.12;
-  letter-spacing: -0.02em;
-  margin: 0 0 24px;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  margin: 0 0 20px;
 }
 
 .ls-subhead {
   font-family: 'Instrument Serif', serif;
+  font-style: normal;
+  font-size: clamp(1.1rem, 2.8vw, 1.4rem);
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.6;
+  margin: 0 0 36px;
+}
+
+.ls-word-wrap {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  height: 1.3em;
+}
+
+.ls-word-slot {
+  display: inline-block;
+  color: #fff;
   font-style: italic;
-  font-size: clamp(1.05rem, 3vw, 1.35rem);
-  color: rgba(255, 255, 255, 0.45);
-  line-height: 1.4;
-  margin: 0;
+}
+
+.ls-word-slot.ls-word-exit {
+  animation: word-exit 0.3s ease forwards;
+}
+
+.ls-word-slot.ls-word-enter {
+  animation: word-enter 0.3s ease forwards;
+}
+
+@keyframes word-exit {
+  to { opacity: 0; transform: translateY(-100%); }
+}
+
+@keyframes word-enter {
+  from { opacity: 0; transform: translateY(100%); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.ls-hero-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
 }
 
 .ls-kicker {
@@ -77,49 +126,6 @@
   text-transform: uppercase;
   color: var(--accent);
   margin-bottom: 20px;
-}
-
-.ls-copy {
-  font-family: 'Instrument Serif', serif;
-  font-size: clamp(1.05rem, 2.5vw, 1.2rem);
-  color: rgba(255, 255, 255, 0.55);
-  line-height: 1.85;
-  margin: 0;
-}
-
-.ls-section-headline {
-  font-family: 'Outfit', sans-serif;
-  font-weight: 600;
-  font-size: clamp(1.2rem, 3.5vw, 1.7rem);
-  color: #fff;
-  line-height: 1.25;
-  margin: 0 0 28px;
-}
-
-.ls-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  counter-reset: ls;
-}
-
-.ls-list li {
-  counter-increment: ls;
-  position: relative;
-  padding-left: 2rem;
-  font-size: 1rem;
-  color: rgba(255, 255, 255, 0.65);
-  line-height: 2;
-}
-
-.ls-list li::before {
-  content: counter(ls) ".";
-  position: absolute;
-  left: 0;
-  font-family: 'Syne Mono', monospace;
-  font-size: 0.72rem;
-  color: rgba(255, 255, 255, 0.25);
-  top: 0.55em;
 }
 
 .ls-cta-headline {
@@ -141,12 +147,12 @@
 }
 
 .landing-cta {
-  padding: 12px 28px;
+  padding: 13px 32px;
   background: #fff;
   border: none;
   color: #0a0a0c;
   font-family: 'Outfit', sans-serif;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   font-weight: 600;
   letter-spacing: 0.04em;
   cursor: pointer;
@@ -158,10 +164,8 @@
 }
 
 .ls-signin-link {
-  display: block;
-  margin-top: 16px;
   font-family: 'Syne Mono', monospace;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   letter-spacing: 0.04em;
   color: rgba(255, 255, 255, 0.25);
   text-decoration: none;
@@ -308,6 +312,130 @@
   50%       { opacity: 1; }
 }
 
+/* ── Game loop section ────────────────────────────────────────── */
+
+.ls-loop-section {
+  padding: 80px 0;
+  background: #0d0d10;
+}
+
+.ls-loop-inner {
+  display: flex;
+  gap: 24px;
+  width: 100%;
+  max-width: 1100px;
+  padding: 0 48px;
+}
+
+.ls-step-card {
+  flex: 1;
+  padding: 28px 24px;
+  background: #0a0a0c;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-top: 2px solid var(--accent);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ls-step-num {
+  font-family: 'Syne Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+}
+
+.ls-step-title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 1.15rem;
+  color: #fff;
+}
+
+.ls-step-desc {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.65;
+}
+
+/* ── Quest preview section ────────────────────────────────────── */
+
+.ls-preview-section {
+  padding: 80px 0;
+}
+
+.ls-quest-card {
+  margin-top: 20px;
+  padding: 24px;
+  background: #111114;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 2px solid var(--accent);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ls-quest-top {
+  display: flex;
+  gap: 8px;
+}
+
+.ls-quest-tag {
+  font-family: 'Syne Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  padding: 3px 8px;
+  border-radius: 2px;
+  text-transform: uppercase;
+}
+
+.ls-tag-xp {
+  background: rgba(200, 65, 10, 0.2);
+  color: var(--accent);
+}
+
+.ls-tag-diff {
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.ls-quest-title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 1.15rem;
+  color: #fff;
+  line-height: 1.3;
+}
+
+.ls-quest-desc {
+  font-family: 'Instrument Serif', serif;
+  font-size: 0.975rem;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.7;
+}
+
+.ls-quest-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.ls-quest-skill {
+  font-family: 'Syne Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.ls-quest-gold {
+  font-family: 'Syne Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--gold);
+  letter-spacing: 0.06em;
+}
+
 /* ── Mobile responsive ────────────────────────────────────────── */
 
 @media (max-width: 768px) {
@@ -322,6 +450,11 @@
     flex: none;
     width: 100%;
     max-width: 420px;
+  }
+
+  .ls-loop-inner {
+    flex-direction: column;
+    padding: 0 24px;
   }
 }
 

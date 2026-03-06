@@ -33,14 +33,23 @@
 <!-- ══ LANDING ══════════════════════════════════════════════════ -->
 <div class="screen active" id="s-landing">
 
-  <!-- S1: Hook -->
+  <!-- S1: Hero -->
   <section class="ls-section ls-hook">
     <div class="ls-hook-inner">
 
       <!-- Left: copy -->
       <div class="ls-col-text">
-        <h1 class="ls-headline">You know exactly who you're trying to become.</h1>
-        <p class="ls-subhead">So why does it keep getting postponed?</p>
+        <div class="ls-wordmark">LIFEGAME</div>
+        <h1 class="ls-headline">Gamify Your Life.</h1>
+        <p class="ls-subhead">
+          Turn your
+          <span class="ls-word-wrap"><span class="ls-word-slot" id="ls-word-slot">dreams</span></span>
+          into daily quests of improvement.
+        </p>
+        <div class="ls-hero-actions">
+          <button class="landing-cta" onclick="go('s-auth')">Start &rarr;</button>
+          <a class="ls-signin-link" href="#" onclick="go('s-auth');return false;">Already have an account? Sign in</a>
+        </div>
       </div>
 
       <!-- Right: demo card -->
@@ -69,35 +78,45 @@
     <div class="ls-scroll-hint">&#8595; scroll</div>
   </section>
 
-  <div class="ls-divider"></div>
-
-  <!-- S2: Problem -->
-  <section class="ls-section">
-    <div class="ls-wrap">
-      <div class="ls-kicker">THE PROBLEM</div>
-      <p class="ls-copy">Most people don't fail because they're lazy.<br>
-      They fail because the goal feels too far away.<br>
-      So they plan. Research. Wait for the right moment.<br>
-      And nothing happens.</p>
+  <!-- S2: Game Loop -->
+  <section class="ls-section ls-loop-section">
+    <div class="ls-loop-inner">
+      <div class="ls-step-card">
+        <div class="ls-step-num">01</div>
+        <div class="ls-step-title">Talk</div>
+        <div class="ls-step-desc">Tell the AI who you want to become. No forms. No questionnaires. Just a conversation.</div>
+      </div>
+      <div class="ls-step-card">
+        <div class="ls-step-num">02</div>
+        <div class="ls-step-title">Get Quests</div>
+        <div class="ls-step-desc">Receive 5&ndash;7 daily quests calibrated to your level, your life, and your goal.</div>
+      </div>
+      <div class="ls-step-card">
+        <div class="ls-step-num">03</div>
+        <div class="ls-step-title">Level Up</div>
+        <div class="ls-step-desc">Check in daily. Earn XP. Build the streak. Watch the gap between you and your goal close.</div>
+      </div>
     </div>
   </section>
 
-  <div class="ls-divider"></div>
-
-  <!-- S3: Solution -->
-  <section class="ls-section">
+  <!-- S3: Quest Preview -->
+  <section class="ls-section ls-preview-section">
     <div class="ls-wrap">
-      <div class="ls-kicker">THE SYSTEM</div>
-      <h2 class="ls-section-headline">LIFEGAME breaks the gap into steps you can take today.</h2>
-      <ol class="ls-list">
-        <li>Tell us who you're trying to become</li>
-        <li>Get quests calibrated to where you are now</li>
-        <li>Check in daily. Level up for real.</li>
-      </ol>
+      <div class="ls-kicker">WHAT A QUEST LOOKS LIKE</div>
+      <div class="ls-quest-card">
+        <div class="ls-quest-top">
+          <span class="ls-quest-tag ls-tag-xp">+120 XP</span>
+          <span class="ls-quest-tag ls-tag-diff">MEDIUM</span>
+        </div>
+        <div class="ls-quest-title">Build Your First Client Portfolio</div>
+        <div class="ls-quest-desc">Create a simple 3-page portfolio site showcasing 2 sample projects. Use free tools. Focus on clarity over perfection.</div>
+        <div class="ls-quest-meta">
+          <span class="ls-quest-skill">CRAFT</span>
+          <span class="ls-quest-gold">+80 &#9670; Gold</span>
+        </div>
+      </div>
     </div>
   </section>
-
-  <div class="ls-divider"></div>
 
   <!-- S4: CTA -->
   <section class="ls-section ls-cta-section">
