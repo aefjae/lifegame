@@ -1,6 +1,194 @@
-/* ══ LANDING & AUTH — dark minimal screens ═══════════════════════ */
+/* ══ LANDING — scrollable dark narrative page ════════════════════ */
 
-#s-landing.active,
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+#s-landing.active {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  background: #0a0a0c;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  animation: fade-in 0.5s ease;
+}
+
+/* ── Sections ─────────────────────────────────────────────────── */
+
+.ls-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 80px 0;
+}
+
+.ls-hook {
+  min-height: 100vh;
+  justify-content: center;
+  position: relative;
+  padding: 80px 0;
+}
+
+.ls-cta-section {
+  min-height: 100vh;
+  justify-content: center;
+}
+
+.ls-wrap {
+  width: 100%;
+  max-width: 560px;
+  padding: 0 32px;
+}
+
+.ls-divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* ── Typography ───────────────────────────────────────────────── */
+
+.ls-headline {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: clamp(1.9rem, 5.5vw, 3rem);
+  color: #fff;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  margin: 0 0 24px;
+}
+
+.ls-subhead {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: clamp(1.05rem, 3vw, 1.35rem);
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.ls-kicker {
+  font-family: 'Syne Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 20px;
+}
+
+.ls-copy {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(1.05rem, 2.5vw, 1.2rem);
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.85;
+  margin: 0;
+}
+
+.ls-section-headline {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: clamp(1.2rem, 3.5vw, 1.7rem);
+  color: #fff;
+  line-height: 1.25;
+  margin: 0 0 28px;
+}
+
+.ls-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  counter-reset: ls;
+}
+
+.ls-list li {
+  counter-increment: ls;
+  position: relative;
+  padding-left: 2rem;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 2;
+}
+
+.ls-list li::before {
+  content: counter(ls) ".";
+  position: absolute;
+  left: 0;
+  font-family: 'Syne Mono', monospace;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.25);
+  top: 0.55em;
+}
+
+.ls-cta-headline {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  color: #fff;
+  line-height: 1.15;
+  margin: 0 0 16px;
+}
+
+.ls-cta-sub {
+  font-family: 'Syne Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
+  margin: 0 0 32px;
+}
+
+.landing-cta {
+  padding: 12px 28px;
+  background: #fff;
+  border: none;
+  color: #0a0a0c;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.landing-cta:hover {
+  opacity: 0.82;
+}
+
+.ls-signin-link {
+  display: block;
+  margin-top: 16px;
+  font-family: 'Syne Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.25);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.ls-signin-link:hover {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ── Scroll hint ──────────────────────────────────────────────── */
+
+.ls-scroll-hint {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Syne Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.2);
+  white-space: nowrap;
+}
+
+/* ══ AUTH — dark minimal screen ══════════════════════════════════ */
+
 #s-auth.active {
   display: flex;
   position: fixed;
@@ -12,71 +200,6 @@
   justify-content: center;
   animation: fade-in 0.5s ease;
 }
-
-@keyframes fade-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-
-/* ── Landing Screen ───────────────────────────────────────────── */
-
-.landing-wrap {
-  width: 100%;
-  max-width: 520px;
-  padding: 0 32px;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.landing-headline {
-  font-family: 'Syne', sans-serif;
-  font-size: clamp(1.8rem, 5vw, 2.8rem);
-  font-weight: 800;
-  color: #fff;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-  margin: 0;
-}
-
-.landing-subhead {
-  font-family: 'Instrument Serif', serif;
-  font-size: clamp(1.05rem, 3vw, 1.35rem);
-  color: rgba(255, 255, 255, 0.45);
-  font-style: italic;
-  line-height: 1.4;
-  margin: 0;
-}
-
-.landing-body {
-  font-family: 'Syne Mono', monospace;
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.3);
-  text-transform: uppercase;
-  line-height: 1.7;
-  margin: 0;
-}
-
-.landing-cta {
-  align-self: flex-start;
-  padding: 12px 28px;
-  background: #fff;
-  border: none;
-  color: #0a0a0c;
-  font-family: 'Syne', sans-serif;
-  font-size: 0.9rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-
-.landing-cta:hover {
-  opacity: 0.82;
-}
-
-/* ── Auth Screen ──────────────────────────────────────────────── */
 
 .auth-wrap {
   width: 100%;

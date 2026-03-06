@@ -13,7 +13,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
 <!-- Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Syne+Mono&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600&family=Syne:wght@400;500;600;700;800&family=Syne+Mono&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 
 <!-- Styles (tokens must load first) -->
 <link rel="stylesheet" href="css/tokens.css">
@@ -32,12 +32,56 @@
 
 <!-- ══ LANDING ══════════════════════════════════════════════════ -->
 <div class="screen active" id="s-landing">
-  <div class="landing-wrap">
-    <h1 class="landing-headline">You know exactly who you're trying to become.</h1>
-    <p class="landing-subhead">So why does it keep getting postponed?</p>
-    <p class="landing-body">LIFEGAME breaks the gap into steps you can take today.</p>
-    <button class="landing-cta" onclick="go('s-auth')">Start &rarr;</button>
-  </div>
+
+  <!-- S1: Hook -->
+  <section class="ls-section ls-hook">
+    <div class="ls-wrap">
+      <h1 class="ls-headline">You know exactly who you're trying to become.</h1>
+      <p class="ls-subhead">So why does it keep getting postponed?</p>
+    </div>
+    <div class="ls-scroll-hint">&#8595; scroll</div>
+  </section>
+
+  <div class="ls-divider"></div>
+
+  <!-- S2: Problem -->
+  <section class="ls-section">
+    <div class="ls-wrap">
+      <div class="ls-kicker">THE PROBLEM</div>
+      <p class="ls-copy">Most people don't fail because they're lazy.<br>
+      They fail because the goal feels too far away.<br>
+      So they plan. Research. Wait for the right moment.<br>
+      And nothing happens.</p>
+    </div>
+  </section>
+
+  <div class="ls-divider"></div>
+
+  <!-- S3: Solution -->
+  <section class="ls-section">
+    <div class="ls-wrap">
+      <div class="ls-kicker">THE SYSTEM</div>
+      <h2 class="ls-section-headline">LIFEGAME breaks the gap into steps you can take today.</h2>
+      <ol class="ls-list">
+        <li>Tell us who you're trying to become</li>
+        <li>Get quests calibrated to where you are now</li>
+        <li>Check in daily. Level up for real.</li>
+      </ol>
+    </div>
+  </section>
+
+  <div class="ls-divider"></div>
+
+  <!-- S4: CTA -->
+  <section class="ls-section ls-cta-section">
+    <div class="ls-wrap">
+      <h2 class="ls-cta-headline">Ready to start?</h2>
+      <p class="ls-cta-sub">Takes 2 minutes. No forms. Just talk.</p>
+      <button class="landing-cta" onclick="go('s-auth')">Start &rarr;</button>
+      <a class="ls-signin-link" href="#" onclick="go('s-auth');return false;">Already have an account? Sign in</a>
+    </div>
+  </section>
+
 </div>
 
 <!-- ══ AUTH ═════════════════════════════════════════════════════ -->
