@@ -35,9 +35,36 @@
 
   <!-- S1: Hook -->
   <section class="ls-section ls-hook">
-    <div class="ls-wrap">
-      <h1 class="ls-headline">You know exactly who you're trying to become.</h1>
-      <p class="ls-subhead">So why does it keep getting postponed?</p>
+    <div class="ls-hook-inner">
+
+      <!-- Left: copy -->
+      <div class="ls-col-text">
+        <h1 class="ls-headline">You know exactly who you're trying to become.</h1>
+        <p class="ls-subhead">So why does it keep getting postponed?</p>
+      </div>
+
+      <!-- Right: demo card -->
+      <div class="ls-col-demo">
+        <div class="ls-demo-card">
+          <div class="ls-demo-header">
+            <span class="ls-demo-dot"></span>
+            <span class="ls-demo-label">LIFEGAME &middot; Character Creation</span>
+          </div>
+          <div class="ls-demo-chat">
+            <div class="ls-demo-ai-msg">What do you want to become?</div>
+            <div class="ls-demo-user-msg">
+              <span id="ls-typewriter"></span><span class="ls-cursor">|</span>
+            </div>
+          </div>
+          <div class="ls-demo-footer">
+            <span class="ls-demo-xp-label">XP &middot; LEVEL 1</span>
+            <div class="ls-demo-xp-track">
+              <div class="ls-demo-xp-fill"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
     <div class="ls-scroll-hint">&#8595; scroll</div>
   </section>
@@ -345,6 +372,7 @@
 <script src="js/dashboard.js"></script>
 <script src="js/community.js"></script>
 <script src="js/auth.js"></script>
+<script src="js/landing.js"></script>
 
 <!-- Service Worker registration -->
 <script>
